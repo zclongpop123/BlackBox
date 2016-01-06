@@ -1,0 +1,95 @@
+// Created by Kurt Wong @ 2005-4-20 9:18
+// Created: 2005-4-22 16:31
+// Updated: 11/17/2005 6:46PM
+// ...
+
+global proc kwRemoveNamespaces()
+//
+// DESCRIPTIONS:
+//	remove the namespace of selected hierachy or all the namespaces with nothing selected.
+//
+{
+	string $namespaces[];
+	string $sel[] = `ls -sl`;
+
+	//
+	if (!size($sel))
+	{
+		// get top-level namespaces
+		namespace -set ":";
+		$namespaces = `namespaceInfo -lon`;
+		$namespaces = stringArrayRemove({"UI"}, $namespaces);
+		for ($i=0; $i<size($namespaces); $i++) {
+			$namespaces[$i] = ":" + $namespaces[$i];
+		}
+	}
+	else
+	{
+		// get namespaces which contains selected objects
+		for ($obj in $sel)
+		{
+			string $namespace = `substitute "[^:]+$" $obj ""`;
+			if (size($namespace))
+				$namespaces[size($namespaces)] = ":" + $namespace;
+		}
+	}
+
+	// get all the sub-level namespaces
+	string $subNamespaces[] = $namespaces;
+	string $tmpNamespaces[];
+	string $tmpSubNamespaces[];
+	do {
+		$tmpNamespaces = {};
+		$tmpSubNamespaces = {};
+		for ($namespace in $subNamespaces) {
+			namespace -set $namespace;
+			$tmpSubNamespaces = `namespaceInfo -lon`;
+			for ($i=0; $i<size($tmpSubNamespaces); $i++) {
+				$tmpSubNamespaces[$i] = ":" + $tmpSubNamespaces[$i];
+			}
+			$tmpNamespaces = stringArrayCatenate($tmpNamespaces, $tmpSubNamespaces);
+		}
+		$namespaces = stringArrayCatenate($namespaces, $tmpNamespaces);
+		$subNamespaces = $tmpNamespaces;
+	}while (size($tmpNamespaces));
+
+
+	string $succeed[] = {};
+	string $failed[] = {};
+	// do with each nameSpace
+	for ($i=(size($namespaces)-1); $i>=0; $i--)	{
+		namespace -set $namespaces[$i];
+		string $contents[] = `namespaceInfo -ls`;
+		namespace -set ":";
+		for ($obj in $contents)	{
+			string $newName = `match "[^:]+$" $obj`;
+			string $stringAhead = `substitute "[^:]+$" $obj ""`;
+			string $ObjsWithSameName[] = `ls -l ($stringAhead + "*" + $newName)`;
+			for ($each in $ObjsWithSameName) {
+//				catch(`evalEcho("select -r " + $each)`);
+//				catch(`evalEcho("rename " + "\"" + $newName + "\"")`);
+				catch(evalEcho("rename \"" + $each + "\" \"" + $newName + "\""));
+			}
+		}
+
+		if (catch(`namespace -rm $namespaces[$i]`))
+			$failed[size($failed)] = $namespaces[$i];
+		else
+			$succeed[size($succeed)] = $namespaces[$i];
+	}
+
+
+
+	print "-------------------------------------------------\n";
+	for ($each in $succeed)
+		print ("// Succeed: " + $each + "\n");
+
+	print "-------------------------------------------------\n";
+	for ($each in $failed)
+		print ("// Failed: " + $each + "\n");
+
+	print "-------------------------------------------------\n";
+	print ("Succeed: " + size($succeed) + "   Failed: " + size($failed) + "\n");
+}
+
+// end of script
