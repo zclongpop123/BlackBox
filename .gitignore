@@ -1,0 +1,27 @@
+#- Python binary type -+
+
+*.pyc
+
+
+
+#- window database -+
+
+*.db
+
+
+
+#- wing IDE project file -+
+
+*.wpr
+*.wpu
+
+
+
+#- pyCharm project file -+
+
+*.idea
+
+
+#- Apple MacOS dataBase -+
+
+.DS_Store
