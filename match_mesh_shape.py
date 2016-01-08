@@ -6,7 +6,7 @@
 import pymel.core
 import maya.OpenMaya as OpenMaya
 #--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-def match_mesh_shape(src, dst, sapce='object'):
+def match_mesh_shape(src, dst, space='object'):
     #- pymel
     src_pml_node = pymel.core.PyNode(src)
     dst_pml_node = pymel.core.PyNode(dst)
@@ -22,5 +22,5 @@ def match_mesh_shape(src, dst, sapce='object'):
     #- get set points
     api_pnt_ary = OpenMaya.MPointArray()
     space_array = dict((('object', OpenMaya.MSpace.kObject), ('world', OpenMaya.MSpace.kWorld)))
-    src_mfn_node.getPoints(api_pnt_ary, space_array.get(sapce, OpenMaya.MSpace.kObject))
-    dst_mfn_node.setPoints(api_pnt_ary, space_array.get(sapce, OpenMaya.MSpace.kObject))
+    src_mfn_node.getPoints(api_pnt_ary, space_array.get(space, OpenMaya.MSpace.kObject))
+    dst_mfn_node.setPoints(api_pnt_ary, space_array.get(space, OpenMaya.MSpace.kObject))
