@@ -21,19 +21,21 @@ def find_intersect_vertex(obj_A, obj_b):
     comp_list = list()
     closest_point = OpenMaya.MPoint()
     farray = OpenMaya.MFloatPointArray()
-    for i in xrange(iterator.count()):
-        farray.clear()
 
+    point = OpenMaya.MFloatPoint()
+    for i in xrange(iterator.count()):
         current_point = iterator.position(OpenMaya.MSpace.kWorld)
         src_mfn_node.getClosestPoint(current_point, closest_point, OpenMaya.MSpace.kWorld)
 
-        point  = OpenMaya.MFloatPoint(current_point.x,  current_point.y, current_point.z)
-        vector = OpenMaya.MFloatVector(closest_point.x, closest_point.y, closest_point.z)
+        point.setCast(current_point)
+        vector = OpenMaya.MFloatVector(closest_point)
 
+        farray.clear()
         src_mfn_node.allIntersections(point, vector, None, None,
                                       False, OpenMaya.MSpace.kWorld,
                                       10000, False, None, False,
                                       farray, None, None, None, None, None)
+
         if farray.length() % 2 == 1:
             comp_list.append(iterator.index())
         iterator.next()
@@ -50,6 +52,7 @@ def find_intersect_vertex(obj_A, obj_b):
     mSelectionList = OpenMaya.MSelectionList()
     mSelectionList.add(dst_dag_path, vertex_components)
     OpenMaya.MGlobal.setActiveSelectionList(mSelectionList)
+
 
 if __name__ == '__main__':
     find_intersect_vertex('pSphere1', 'pSphere2')
