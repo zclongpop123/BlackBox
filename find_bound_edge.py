@@ -10,7 +10,7 @@ def find_bound_edge(geometry):
     '''
     find polygon's bound edge...
     '''
-    geo_pml_node = pymel.core.PyNode('geometry')
+    geo_pml_node = pymel.core.PyNode(geometry)
     geo_dag_path = geo_pml_node.__apiobject__()
 
     face_int_array = OpenMaya.MIntArray()
