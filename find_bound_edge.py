@@ -17,13 +17,13 @@ def find_bound_edge(geometry):
     iterator = OpenMaya.MItMeshEdge(geo_pml_node.__apiobject__())
 
     api_sign_comp = OpenMaya.MFnSingleIndexedComponent()
-    api_edge_comp = vertSelection.create(OpenMaya.MFn.kMeshEdgeComponent)
+    api_edge_comp = api_sign_comp.create(OpenMaya.MFn.kMeshEdgeComponent)
 
     while not iterator.isDone():
         iterator.getConnectedFaces(face_int_array)
 
         if face_int_array.length() < 2:
-            vertSelection.addElement(iterator.index())
+            api_sign_comp.addElement(iterator.index())
 
         iterator.next()
 
