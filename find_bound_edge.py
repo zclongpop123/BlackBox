@@ -13,16 +13,18 @@ def find_bound_edge(geometry):
     geo_pml_node = pymel.core.PyNode(geometry)
     geo_dag_path = geo_pml_node.__apiobject__()
 
-    face_int_array = OpenMaya.MIntArray()
-    iterator = OpenMaya.MItMeshEdge(geo_pml_node.__apiobject__())
-
     api_sign_comp = OpenMaya.MFnSingleIndexedComponent()
     api_edge_comp = api_sign_comp.create(OpenMaya.MFn.kMeshEdgeComponent)
 
-    while not iterator.isDone():
-        iterator.getConnectedFaces(face_int_array)
+    script_util = OpenMaya.MScriptUtil()
+    connect_face_count_ptr = script_util.asIntPtr()
 
-        if face_int_array.length() < 2:
+    iterator = OpenMaya.MItMeshEdge(geo_pml_node.__apiobject__())
+    while not iterator.isDone():
+        iterator.numConnectedFaces(connect_face_count_ptr)
+
+        connect_face_count = OpenMaya.MScriptUtil(connect_face_count_ptr).asInt()
+        if connect_face_count < 2:
             api_sign_comp.addElement(iterator.index())
 
         iterator.next()
