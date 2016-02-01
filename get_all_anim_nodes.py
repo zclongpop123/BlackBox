@@ -17,7 +17,7 @@ def get_all_anim_nodes(input_node):
     dg_iterator = OpenMaya.MItDependencyGraph(node_api_instance, OpenMaya.MItDependencyGraph.kUpstream, OpenMaya.MItDependencyGraph.kPlugLevel)
     while not dg_iterator.isDone():
         item_obj = dg_iterator.currentItem()
-        item_mfn  = OpenMaya.MFnDependencyNode(item_obj)
+        item_mfn = OpenMaya.MFnDependencyNode(item_obj)
 
         if item_obj.hasFn(OpenMaya.MFn.kAnimCurve):
             yield item_mfn.name()
