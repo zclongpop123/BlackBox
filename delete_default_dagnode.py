@@ -9,5 +9,5 @@ import maya.OpenMaya as OpenMaya
 def deleteDefaultDagNode(object_name):
     api_node = pymel.core.PyNode(object_name).__apimobject__()
     api_tool = OpenMaya.MDagModifier()
-   
+
     api_tool.deleteNode(api_node)

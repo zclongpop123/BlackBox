@@ -8,7 +8,7 @@ import pymel.core
 def unlockReferencedAttr(attribute):
     pml_attr = pymel.core.PyNode(attribute)
     api_attr = pml_attr.__apimplug__()
-    
+
     #-
-    api_attr.setKeyable(True) 
+    api_attr.setKeyable(True)
     api_attr.setLocked(False)

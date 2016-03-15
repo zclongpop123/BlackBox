@@ -16,13 +16,13 @@ def findCoincideVertex(geometry):
         MD5 = md5.new()
         MD5.update('%f%f%f'%(ps[0], ps[1], ps[2]))
         posidict.setdefault(MD5.hexdigest(), list()).append('%s.vtx[%d]'%(geometry, i))
-    
+
     #-
     res = list()
     for v in posidict.itervalues():
         if len(v) < 2:
             continue
         res.extend(v)
-    
+
     #-
     mc.select(res)
